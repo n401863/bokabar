@@ -1,22 +1,22 @@
 <?php
-$naam = $_POST['naam'];
-$email = $_POST['email'];
-$telefoonnummer = $_POST['telefoonnummer'];
-$datum = $_POST['datum'];
-$tijd = $_POST['tijd'];
-$aantal_personen = $_POST['aantal_personen'];
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $naam = htmlspecialchars($_POST['naam']);
+    $email = htmlspecialchars($_POST['email']);
+    $bericht = htmlspecialchars($_POST['bericht']);
 
-$onderwerp = "Nieuwe reservering";
-$bericht = "Er is een nieuwe reservering gemaakt door $naam.\n\n";
-$bericht .= "Details:\n";
-$bericht .= "Naam: $naam\n";
-$bericht .= "E-mail: $email\n";
-$bericht .= "Telefoonnummer: $telefoonnummer\n";
-$bericht .= "Datum: $datum\n";
-$bericht .= "Tijd: $tijd\n";
-$bericht .= "Aantal personen: $aantal_personen\n";
+    $to = 'n401863@gymnasiumnovum.nl';
+    $subject = 'Nieuw Registratieformulier Inzending';
+    $message = "Naam: $naam\nE-mail: $email\nBericht: $bericht";
+    $headers = "From: $email";
 
-mail("n401863@gymnasiumnovum.nl", $onderwerp, $bericht);
-
-echo "Reservering succesvol verstuurd!";
+    if (mail($to, $subject, $message, $headers)) {
+        // Redirect naar Google na succesvolle verzending
+        header("Location: https://www.google.com");
+        exit();
+    } else {
+        echo "Er is een fout opgetreden bij het verzenden van de e-mail.";
+    }
+} else {
+    echo "Ongeldige aanvraagmethode.";
+}
 ?>
