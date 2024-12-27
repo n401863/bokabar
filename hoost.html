@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Microfoon naar Bluetooth</title>
+</head>
+<body>
+    <h1>Microfoon naar Bluetooth</h1>
+    <button id="start">Start Microfoon</button>
+    <button id="connect">Verbind met Bluetooth</button>
+    <script>
+        let audioContext;
+        let microphone;
+        let bluetoothDevice;
+
+        document.getElementById('start').onclick = async () => {
+            // Vraag toegang tot de microfoon
+            const stream = await navigator.mediaDevices.getUser Media({ audio: true });
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            microphone = audioContext.createMediaStreamSource(stream);
+            console.log('Microfoon is gestart');
+        };
+
+        document.getElementById('connect').onclick = async () => {
+            try {
+                // Zoek naar Bluetooth-apparaten
+                bluetoothDevice = await navigator.bluetooth.requestDevice({
+                    filters: [{ services: ['audio_service'] }] // Pas dit aan op basis van je apparaat
+                });
+
+                const server = await bluetoothDevice.gatt.connect();
+                console.log('Verbonden met Bluetooth-apparaat');
+
+                // Hier zou je de audio data naar het Bluetooth-apparaat moeten sturen
+                // Dit is een complex proces en vereist een specifieke implementatie
+                // afhankelijk van het Bluetooth-apparaat en de service die je gebruikt.
+
+            } catch (error) {
+                console.error('Bluetooth verbinding mislukt:', error);
+            }
+        };
+    </script>
+</body>
+</html>
